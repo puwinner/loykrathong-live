@@ -783,24 +783,36 @@ function drawCharacter(ctx, char) {
     ctx.fillText('💃', 0, -42);
   }
 
-  // Name Tag
-  ctx.fillStyle = 'rgba(6, 10, 23, 0.78)';
+  // Name Tag Badge (Enlarged, high-contrast, auto-sized to name length)
+  ctx.font = char.isSelf ? 'bold 13.5px Prompt' : 'bold 12.5px Prompt';
+  const nameW = ctx.measureText(char.name).width;
+  const badgeW = Math.max(nameW + 18, 64);
+  const badgeH = 22;
+  const badgeY = -58;
+
+  ctx.fillStyle = char.isSelf ? 'rgba(10, 16, 36, 0.92)' : 'rgba(6, 10, 23, 0.85)';
   ctx.beginPath();
-  ctx.roundRect(-40, -54, 80, 16, 8);
+  ctx.roundRect(-badgeW / 2, badgeY, badgeW, badgeH, 11);
   ctx.fill();
 
+  ctx.strokeStyle = char.isSelf ? 'rgba(255, 209, 82, 0.95)' : 'rgba(255, 255, 255, 0.3)';
+  ctx.lineWidth = char.isSelf ? 1.5 : 1;
+  ctx.stroke();
+
   ctx.fillStyle = char.isSelf ? '#ffd152' : '#ffffff';
-  ctx.font = 'bold 9.5px Prompt';
   ctx.textAlign = 'center';
-  ctx.fillText(char.name, 0, -42.5);
+  ctx.textBaseline = 'middle';
+  ctx.fillText(char.name, 0, badgeY + badgeH / 2 + 0.5);
+  ctx.textBaseline = 'alphabetic'; // Reset
 
   // Self Indicator Golden Arrow
   if (char.isSelf) {
+    const arrowY = badgeY - 5;
     ctx.fillStyle = '#ffd152';
     ctx.beginPath();
-    ctx.moveTo(0, -64);
-    ctx.lineTo(-5, -72);
-    ctx.lineTo(5, -72);
+    ctx.moveTo(0, arrowY);
+    ctx.lineTo(-5.5, arrowY - 9);
+    ctx.lineTo(5.5, arrowY - 9);
     ctx.closePath();
     ctx.fill();
   }
@@ -808,16 +820,16 @@ function drawCharacter(ctx, char) {
   // Chat Speech Bubble
   if (char.chat && char.chat.trim().length > 0) {
     const text = char.chat;
-    ctx.font = '11px Prompt';
+    ctx.font = '12px Prompt';
     const textW = ctx.measureText(text).width;
-    const bubbleW = Math.max(textW + 18, 55);
-    const bubbleH = 24;
+    const bubbleW = Math.max(textW + 20, 60);
+    const bubbleH = 26;
     const bx = -bubbleW / 2;
-    const by = -90;
+    const by = -96;
 
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
     ctx.beginPath();
-    ctx.roundRect(bx, by, bubbleW, bubbleH, 8);
+    ctx.roundRect(bx, by, bubbleW, bubbleH, 10);
     ctx.fill();
 
     ctx.beginPath();
@@ -828,7 +840,7 @@ function drawCharacter(ctx, char) {
 
     ctx.fillStyle = '#1e272e';
     ctx.textAlign = 'center';
-    ctx.fillText(text, 0, by + 16);
+    ctx.fillText(text, 0, by + 17);
   }
 
   ctx.restore();
@@ -960,30 +972,41 @@ function drawFloatingKrathong(ctx, k) {
   ctx.ellipse(2, -24, 2.8, 5.5 + Math.sin(timeSec * 12) * 1.2, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Name Tag
+  // Name Tag (Clear, legible, auto-sized)
   if (isMyKrathong) {
-    ctx.fillStyle = 'rgba(255, 190, 0, 0.92)';
+    ctx.font = 'bold 12px Prompt';
+    const tagText = `✨ ${k.name} (คุณ)`;
+    const tagW = Math.max(ctx.measureText(tagText).width + 20, 104);
+    ctx.fillStyle = 'rgba(255, 190, 0, 0.94)';
     ctx.beginPath();
-    ctx.roundRect(-50, 20, 100, 18, 9);
+    ctx.roundRect(-tagW / 2, 20, tagW, 22, 11);
     ctx.fill();
     ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 1.2;
     ctx.stroke();
 
     ctx.fillStyle = '#1e142e';
-    ctx.font = 'bold 10px Prompt';
     ctx.textAlign = 'center';
-    ctx.fillText(`✨ ${k.name} (คุณ)`, 0, 33);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(tagText, 0, 31);
+    ctx.textBaseline = 'alphabetic';
   } else {
-    ctx.fillStyle = 'rgba(6, 10, 23, 0.8)';
+    ctx.font = 'bold 11px Prompt';
+    const tagText = k.name || 'กระทง';
+    const tagW = Math.max(ctx.measureText(tagText).width + 16, 68);
+    ctx.fillStyle = 'rgba(6, 10, 23, 0.85)';
     ctx.beginPath();
-    ctx.roundRect(-40, 20, 80, 16, 8);
+    ctx.roundRect(-tagW / 2, 20, tagW, 20, 10);
     ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 209, 82, 0.4)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
 
     ctx.fillStyle = '#ffd152';
-    ctx.font = 'bold 9.5px Prompt';
     ctx.textAlign = 'center';
-    ctx.fillText(k.name || 'กระทง', 0, 32);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(tagText, 0, 30);
+    ctx.textBaseline = 'alphabetic';
   }
 
   ctx.restore();
