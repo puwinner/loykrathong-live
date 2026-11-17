@@ -13,8 +13,11 @@
 
   <!-- App Main Frame -->
   <div class="app-container">
-    <!-- Background Audio: เพลงลอยกระทง -->
-    <audio id="bgm" loop preload="auto" src="/static/assets/loykrathong_song.wav"></audio>
+    <!-- Background Audio: เพลงลอยกระทง (Original High-Fidelity Audio) -->
+    <audio id="bgm" loop preload="auto">
+      <source src="/static/assets/loykrathong_song.mp3" type="audio/mpeg">
+      <source src="/static/assets/loykrathong_song_short.mp3" type="audio/mpeg">
+    </audio>
 
     <!-- Top Header Bar -->
     <header class="top-header">

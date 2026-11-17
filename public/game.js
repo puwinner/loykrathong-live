@@ -210,23 +210,17 @@ function startMusic() {
   isAudioEnabled = true;
 
   if (bgm) {
-    bgm.volume = 0.55;
+    bgm.volume = 0.75;
     bgm.play().then(() => {
-      // Audio element playing successfully!
-    }).catch(() => {
-      // Fallback to Web Audio Synthesizer if autoplay or loading fails
-      if (!isSynthPlaying) {
-        isSynthPlaying = true;
-        synthScoreIndex = 0;
-        stepSynthMusic();
+      // Clear any synth fallback so authentic MP3 studio audio plays cleanly!
+      if (synthTimer) {
+        clearTimeout(synthTimer);
+        synthTimer = null;
       }
+      isSynthPlaying = false;
+    }).catch(() => {
+      // If browser policy deferred play, wait for next user touch
     });
-  } else {
-    if (!isSynthPlaying) {
-      isSynthPlaying = true;
-      synthScoreIndex = 0;
-      stepSynthMusic();
-    }
   }
 }
 
