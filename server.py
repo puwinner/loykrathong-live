@@ -27,7 +27,7 @@ krathongs: List[dict] = []
 npcs: List[dict] = []
 chat_history: List[dict] = []
 
-MAX_KRATHONGS = 60
+MAX_KRATHONGS = 12
 
 # Preset NPC names and greetings
 NPC_PRESETS = [
@@ -55,13 +55,11 @@ for i, preset in enumerate(NPC_PRESETS):
         "chat": ""
     })
 
-# Add initial krathongs directly in the river (Y = 1120 to 1260)
+# Add initial krathongs directly in the river (Y = 1130 to 1240) - Spacious and peaceful
 INIT_WISHES = [
     ("ต้นข้าว", "ขอให้ชีวิตสดใส ลอยทุกข์ลอยโศกออกไป", 1),
     ("น้องมายด์", "ขอขมาพระแม่คงคา สุขสมหวังดังใจ", 2),
-    ("ยายจันทร์", "ขอให้ลูกหลานร่มเย็นเป็นสุข", 3),
-    ("พี่เสก", "ขอให้ปีนี้มีแต่สิ่งดีๆ เข้ามา", 1),
-    ("น้องฟ้า", "ขอให้การงานราบรื่น การเงินมั่งคั่ง", 2)
+    ("ยายจันทร์", "ขอให้ลูกหลานร่มเย็นเป็นสุข", 3)
 ]
 now = time.time()
 for i, (name, wish, ktype) in enumerate(INIT_WISHES):
@@ -70,10 +68,10 @@ for i, (name, wish, ktype) in enumerate(INIT_WISHES):
         "name": name,
         "wish": wish,
         "type": ktype,
-        "x": 60 + i * 140,
-        "y": random.uniform(1130, 1240),
-        "speed": random.uniform(14, 22),
-        "created_at": now - (i * 25)
+        "x": 120 + i * 260,
+        "y": random.uniform(1140, 1230),
+        "speed": random.uniform(14, 19),
+        "created_at": now - (i * 30)
     })
 
 class ConnectionManager:
@@ -167,8 +165,8 @@ async def world_tick():
                 "dog": dog_state
             })
         
-        # Periodic Krathong float by NPCs if river has few krathongs
-        if len(krathongs) < 18 and random.random() < 0.4:
+        # Periodic Krathong float by NPCs (Kept minimal and serene: max 5-6 total krathongs)
+        if len(krathongs) < 5 and random.random() < 0.12:
             random_npc = random.choice(NPC_PRESETS)
             new_k = {
                 "id": f"k_{uuid.uuid4().hex[:8]}",

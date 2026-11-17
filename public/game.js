@@ -1191,15 +1191,21 @@ function update(dt) {
     dog.y += (ddy / ddist) * dogSpeed * dt;
   }
 
-  // Krathongs gently floating in the river from left to right
+  // Krathongs gently floating in the river from left to right (Peaceful & uncluttered)
   for (let i = krathongs.length - 1; i >= 0; i--) {
     const k = krathongs[i];
-    k.x += (k.speed || 18) * dt;
+    k.x += (k.speed || 17) * dt;
 
-    // Loop back from right edge into the left side of the river
+    // When reaching the right edge of the screen:
     if (k.x > WORLD_WIDTH + 60) {
-      k.x = -60;
-      k.y = LANDMARKS.riverMinY + Math.random() * (LANDMARKS.riverMaxY - LANDMARKS.riverMinY);
+      const isMyKrathong = (k.owner_id && k.owner_id === myPlayer.id) || k.isMine;
+      // If there are more than 4 krathongs in the river, let older dummy krathongs drift away
+      if (!isMyKrathong && krathongs.length > 4) {
+        krathongs.splice(i, 1);
+      } else {
+        k.x = -60;
+        k.y = LANDMARKS.riverMinY + 20 + Math.random() * (LANDMARKS.riverMaxY - LANDMARKS.riverMinY - 40);
+      }
     }
   }
 }
