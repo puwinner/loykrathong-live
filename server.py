@@ -265,9 +265,18 @@ async def websocket_endpoint(websocket: WebSocket):
                     p = players[client_id]
                     # Walk player to pier steps by the water
                     p["action"] = "float"
-                    p["target_x"] = random.randint(360, 480)
-                    p["target_y"] = 1040
+                    p["target_x"] = random.randint(390, 460)
+                    p["target_y"] = 1045
                     
+                    # Inform everyone that player is floating a krathong
+                    await manager.broadcast({
+                        "type": "player_action",
+                        "client_id": client_id,
+                        "action": "float",
+                        "target_x": p["target_x"],
+                        "target_y": p["target_y"]
+                    })
+
                     # Create Krathong directly inside the Chao Phraya river water!
                     new_k = {
                         "id": f"k_{uuid.uuid4().hex[:8]}",
@@ -275,7 +284,7 @@ async def websocket_endpoint(websocket: WebSocket):
                         "name": p["name"],
                         "wish": data.get("wish", "ขอให้มีความสุข สมหวังทุกประการ") or "ขอให้มีความสุข สมหวังทุกประการ",
                         "type": int(data.get("krathong_type", 1)),
-                        "x": p["target_x"] + random.uniform(-20, 20),
+                        "x": p["target_x"] + random.uniform(-15, 25),
                         "y": random.uniform(1140, 1220),
                         "speed": random.uniform(14, 22),
                         "created_at": time.time()

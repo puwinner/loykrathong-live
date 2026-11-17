@@ -23,6 +23,7 @@ body {
   color: var(--text-light);
   overflow: hidden;
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -35,6 +36,7 @@ body {
   width: 100%;
   max-width: 560px;
   height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   background-color: #060a17;
@@ -129,8 +131,8 @@ body {
 .canvas-wrapper {
   position: relative;
   flex: 1;
+  min-height: 0;
   width: 100%;
-  height: 100%;
   overflow: hidden;
   background: #060a17;
 }
@@ -169,18 +171,63 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 
-/* Bottom Controls Sheet */
+/* Bottom Controls Sheet (Placed below the river, never covering it!) */
 .bottom-dock {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(0deg, rgba(6, 10, 23, 0.98) 0%, rgba(10, 14, 28, 0.92) 80%, rgba(10, 14, 28, 0) 100%);
-  padding: 12px 14px 18px 14px;
+  position: relative;
+  background: linear-gradient(180deg, rgba(12, 17, 34, 0.96) 0%, rgba(6, 10, 23, 0.99) 100%);
+  border-top: 1.5px solid rgba(255, 209, 82, 0.3);
+  padding: 8px 12px 14px 12px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   z-index: 20;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.dock-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.dock-hint {
+  font-size: 11px;
+  color: var(--primary-gold);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-toggle-dock {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #d1d5db;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+
+.btn-toggle-dock:active {
+  background: rgba(255, 209, 82, 0.3);
+}
+
+.bottom-dock.collapsed .activity-grid {
+  display: none;
+}
+
+.bottom-dock.collapsed .dock-hint {
+  display: none;
+}
+
+.bottom-dock.collapsed {
+  padding-top: 4px;
+  gap: 4px;
 }
 
 /* Activity Quick 2-Row Grid (Fits all 6 buttons neatly without overflowing) */

@@ -13,6 +13,9 @@
 
   <!-- App Main Frame -->
   <div class="app-container">
+    <!-- Background Audio: เพลงลอยกระทง -->
+    <audio id="bgm" loop preload="auto" src="/static/assets/loykrathong_song.wav"></audio>
+
     <!-- Top Header Bar -->
     <header class="top-header">
       <div class="title-group">
@@ -54,8 +57,13 @@
       </div>
     </main>
 
-    <!-- Bottom Floating Control Dock -->
-    <nav class="bottom-dock">
+    <!-- Bottom Floating Control Dock (Below the river) -->
+    <nav class="bottom-dock" id="bottomDock">
+      <div class="dock-header-bar">
+        <span class="dock-hint">🏮 กิจกรรมงานวัด</span>
+        <button class="btn-toggle-dock" id="btnToggleDock">▾ ย่อเมนู</button>
+      </div>
+
       <!-- Quick Festival Activities (2-Row Grid) -->
       <div class="activity-grid">
         <button class="activity-btn" data-action="pray">🙏 ไหว้พระ</button>
