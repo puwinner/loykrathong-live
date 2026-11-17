@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ลอยกระทงออนไลน์ ไลฟ์สด • Loy Krathong Live Interactive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- App Main Frame -->
+  <div class="app-container">
+    <!-- Top Header Bar -->
+    <header class="top-header">
+      <div class="title-group">
+        <span class="festival-badge">งานวัด LIVE</span>
+        <span class="app-title">ลอยกระทงออนไลน์</span>
+      </div>
+      <div class="header-status">
+        <div class="status-pill">
+          <span style="color: #10b981;">●</span>
+          <span><strong id="onlineCount">1</strong> คนในงาน</span>
+        </div>
+        <button class="icon-btn" id="btnAudio" title="เปิด/ปิดเสียงเพลง">🎵</button>
+        <button class="icon-btn" id="btnFullscreen" title="เต็มจอ">⛶</button>
+      </div>
+    </header>
+
+    <!-- Live Canvas Area -->
+    <main class="canvas-wrapper">
+      <canvas id="gameCanvas"></canvas>
+
+      <!-- Floating Event Notification -->
+      <div class="event-toast" id="eventToast">
+        🎉 ยินดีต้อนรับสู่งานวัดลอยกระทงสด!
+      </div>
+
+      <!-- Krathong Detail Card (When tapping a floating krathong in river) -->
+      <div class="krathong-reader-card" id="krathongCard">
+        <div class="reader-header">
+          <div class="reader-author">
+            <span>🪷</span>
+            <span id="cardAuthor">กระทงของ น้องมายด์</span>
+          </div>
+          <button class="btn-close" id="btnCloseCard">&times;</button>
+        </div>
+        <div class="reader-wish" id="cardWish">
+          "ขอให้ครอบครัวร่มเย็นเป็นสุข ไร้โรคภัย สมหวังทุกประการ"
+        </div>
+        <button class="btn-bless" id="btnBless">🙏 ร่วมอนุโมทนา สาธุ (+1)</button>
+      </div>
+    </main>
+
+    <!-- Bottom Floating Control Dock -->
+    <nav class="bottom-dock">
+      <!-- Quick Festival Activities (2-Row Grid) -->
+      <div class="activity-grid">
+        <button class="activity-btn" data-action="pray">🙏 ไหว้พระ</button>
+        <button class="activity-btn" data-action="dance">💃 รำวง</button>
+        <button class="activity-btn" data-action="ferris">🎡 ขึ้นชิงช้า</button>
+        <button class="activity-btn" data-action="lantern">🏮 โคมลอย</button>
+        <button class="activity-btn" data-action="sparkler">✨ เล่นไฟเย็น</button>
+        <button class="activity-btn" data-action="dog">🐕 แกล้งหมาวัด</button>
+      </div>
+
+      <!-- Main Action: Float Krathong & Live Chat -->
+      <div class="action-row">
+        <button class="btn-float-krathong" id="btnOpenFloatModal">
+          <span>🪷</span>
+          <span>ลอยกระทง</span>
+        </button>
+
+        <form class="chat-bar" id="chatForm">
+          <input type="text" class="chat-input" id="chatInput" placeholder="พิมพ์คุยในงานวัด..." maxlength="50" autocomplete="off">
+          <button type="submit" class="btn-send">➤</button>
+        </form>
+      </div>
+    </nav>
+
+    <!-- Welcome / Select Character Modal (First Entry) -->
+    <div class="modal-overlay active" id="welcomeModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title">🏮 ร่วมงานลอยกระทงสด</h2>
+        </div>
+        <p style="font-size: 13px; color: #9ca3af; margin-bottom: 12px;">
+          เลือกตัวละครและใส่ชื่อของคุณ เพื่อเดินเที่ยวงานวัดและลอยกระทงร่วมกับคนอื่นแบบเรียลไทม์!
+        </p>
+
+        <label class="input-label">เลือกตัวละครของคุณ:</label>
+        <div class="avatar-grid" id="avatarGrid">
+          <div class="avatar-item selected" data-type="1">
+            <img src="/static/assets/char_1.png" class="avatar-img-preview" alt="ชาย">
+            <span class="avatar-label">1 ชาย</span>
+          </div>
+          <div class="avatar-item" data-type="2">
+            <img src="/static/assets/char_2.png" class="avatar-img-preview" alt="หญิง">
+            <span class="avatar-label">2 หญิง</span>
+          </div>
+          <div class="avatar-item" data-type="3">
+            <img src="/static/assets/char_3.png" class="avatar-img-preview" alt="หนุ่มแว่น">
+            <span class="avatar-label">3 หนุ่มแว่น</span>
+          </div>
+          <div class="avatar-item" data-type="4">
+            <img src="/static/assets/char_4.png" class="avatar-img-preview" alt="สาวแว่นดำ">
+            <span class="avatar-label">4 สาวแว่นดำ</span>
+          </div>
+          <div class="avatar-item" data-type="5">
+            <img src="/static/assets/char_5.png" class="avatar-img-preview" alt="คุณตา">
+            <span class="avatar-label">5 คุณตา</span>
+          </div>
+          <div class="avatar-item" data-type="6">
+            <img src="/static/assets/char_6.png" class="avatar-img-preview" alt="คุณยาย">
+            <span class="avatar-label">6 คุณยาย</span>
+          </div>
+          <div class="avatar-item" data-type="7">
+            <img src="/static/assets/char_7.png" class="avatar-img-preview" alt="หนุ่มหนวด">
+            <span class="avatar-label">7 หนุ่มหนวด</span>
+          </div>
+          <div class="avatar-item" data-type="8">
+            <img src="/static/assets/char_8.png" class="avatar-img-preview" alt="สาวผมทอง">
+            <span class="avatar-label">8 สาวผมทอง</span>
+          </div>
+        </div>
+
+        <label class="input-label" for="userNameInput">ชื่อเล่นของคุณ:</label>
+        <input type="text" id="userNameInput" class="text-input-field" placeholder="เช่น ต้นข้าว, น้องบิว" maxlength="15" value="ผู้ร่วมงาน">
+
+        <button class="btn-primary-modal" id="btnEnterFestival">เดินเข้าสู่งานวัด 🪷</button>
+      </div>
+    </div>
+
+    <!-- Float Krathong Modal -->
+    <div class="modal-overlay" id="floatModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title">🪷 อธิษฐานและลอยกระทง</h2>
+          <button class="btn-close" id="btnCloseFloatModal">&times;</button>
+        </div>
+
+        <label class="input-label">รูปแบบกระทงของคุณ:</label>
+        <div class="krathong-types" id="krathongTypes">
+          <div class="krathong-card selected" data-ktype="1">
+            <img src="/static/assets/krathong.png" style="width: 50px; height: 50px; object-fit: contain; display: block; margin: 0 auto 4px;" alt="กระทง">
+            <span class="name">กระทงบัวตองมงคล</span>
+          </div>
+        </div>
+
+        <label class="input-label" for="wishInput">คำอธิษฐาน / คำขอพร:</label>
+        <textarea id="wishInput" class="textarea-field" placeholder="ขอขมาพระแม่คงคา และขอให้ชีวิตเจริญรุ่งเรือง..."></textarea>
+
+        <!-- Quick wishes chips -->
+        <label class="input-label" style="font-size: 11px;">คำขอพรยอดนิยม (แตะเพื่อเลือก):</label>
+        <div class="wish-tags">
+          <span class="wish-tag" data-text="ขอให้สุขภาพแข็งแรง ปราศจากโรคภัยทั้งปวง">💪 สุขภาพแข็งแรง</span>
+          <span class="wish-tag" data-text="ขอให้การงานราบรื่น การเงินมั่งคั่ง โชคลาภพรั่งพรู">💰 การงานการเงินปัง</span>
+          <span class="wish-tag" data-text="ขอให้พบเจอแต่ความรักที่ดี สมหวังดั่งใจ">💖 ความรักสมหวัง</span>
+          <span class="wish-tag" data-text="ขอขมาพระแม่คงคา ขอให้อยู่เย็นเป็นสุข ร่มเย็น">🌊 ขอขมาแม่คงคา</span>
+        </div>
+
+        <button class="btn-primary-modal" id="btnConfirmFloat">ปล่อยกระทงลงแม่น้ำ 🪷</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/game.js"></script>
+</body>
+</html>

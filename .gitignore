@@ -1,0 +1,6 @@
+mingit/
+mingit.zip
+__pycache__/
+*.pyc
+.vscode/
+.idea/

@@ -1,0 +1,566 @@
+:root {
+  --primary-gold: #ffd152;
+  --primary-gold-dark: #b8860b;
+  --bg-dark: #080c16;
+  --card-bg: rgba(18, 24, 38, 0.9);
+  --accent-pink: #ff6b8b;
+  --accent-blue: #4facfe;
+  --text-light: #f3f4f6;
+  --text-muted: #9ca3af;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+body {
+  font-family: 'Prompt', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: radial-gradient(circle at center, #1a162b 0%, #080c16 100%);
+  color: var(--text-light);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* App Main Container (Centered mobile frame on desktop, 100% on mobile) */
+.app-container {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #060a17;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 209, 82, 0.1);
+}
+
+@media (min-width: 561px) {
+  .app-container {
+    border-left: 1px solid rgba(255, 209, 82, 0.25);
+    border-right: 1px solid rgba(255, 209, 82, 0.25);
+  }
+}
+
+/* App Header */
+.top-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: linear-gradient(180deg, rgba(6, 10, 23, 0.95) 0%, rgba(6, 10, 23, 0.5) 80%, transparent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  z-index: 20;
+}
+
+.title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.festival-badge {
+  background: linear-gradient(135deg, #ff9900, #ff5e36);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+.app-title {
+  font-size: 15px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff3b0 0%, #ffd152 50%, #ffa500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-pill {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:active {
+  transform: scale(0.92);
+}
+
+/* Canvas Area */
+.canvas-wrapper {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #060a17;
+}
+
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+/* Event Banner Alert */
+.event-toast {
+  position: absolute;
+  top: 58px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(18, 24, 38, 0.92);
+  border: 1.5px solid var(--primary-gold);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 25;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.event-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Bottom Controls Sheet */
+.bottom-dock {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgba(6, 10, 23, 0.98) 0%, rgba(10, 14, 28, 0.92) 80%, rgba(10, 14, 28, 0) 100%);
+  padding: 12px 14px 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 20;
+}
+
+/* Activity Quick 2-Row Grid (Fits all 6 buttons neatly without overflowing) */
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  width: 100%;
+}
+
+.activity-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+  color: #e5e7eb;
+  padding: 7px 4px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.activity-btn:active {
+  transform: scale(0.95);
+  background: rgba(255, 209, 82, 0.25);
+  border-color: var(--primary-gold);
+}
+
+/* Main Action Row */
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Float Krathong Glowing Big Button */
+.btn-float-krathong {
+  background: linear-gradient(135deg, #ffd152 0%, #ff8a00 100%);
+  border: none;
+  color: #2b1700;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(255, 165, 0, 0.45);
+  animation: pulseGlow 2.5s infinite;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-float-krathong:active {
+  transform: scale(0.96);
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 4px 14px rgba(255, 165, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 6px 24px rgba(255, 209, 82, 0.75);
+  }
+}
+
+/* Chat Input Bar */
+.chat-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 3px 6px 3px 14px;
+}
+
+.chat-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 13px;
+  outline: none;
+  font-family: inherit;
+}
+
+.chat-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-send {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.btn-send:active {
+  transform: scale(0.9);
+}
+
+/* Modals */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: #141a2e;
+  border: 1.5px solid rgba(255, 209, 82, 0.35);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-gold);
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* Avatar Selector Grid */
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.avatar-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.avatar-item.selected {
+  border-color: var(--primary-gold);
+  background: rgba(255, 209, 82, 0.2);
+  box-shadow: 0 0 14px rgba(255, 209, 82, 0.45);
+}
+
+.avatar-img-preview {
+  width: 52px;
+  height: 58px;
+  object-fit: contain;
+}
+
+.avatar-label {
+  font-size: 11px;
+  color: #d1d5db;
+  text-align: center;
+}
+
+/* Krathong Selector */
+.krathong-types {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.krathong-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 12px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.krathong-card.selected {
+  border-color: #ff8a00;
+  background: rgba(255, 138, 0, 0.2);
+  box-shadow: 0 0 14px rgba(255, 138, 0, 0.4);
+}
+
+.krathong-card .icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.krathong-card .name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Form inputs inside modals */
+.input-label {
+  font-size: 13px;
+  color: #d1d5db;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.text-input-field, .textarea-field {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: white;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  margin-bottom: 14px;
+}
+
+.textarea-field {
+  resize: none;
+  height: 72px;
+}
+
+.text-input-field:focus, .textarea-field:focus {
+  border-color: var(--primary-gold);
+}
+
+/* Quick wish suggestions */
+.wish-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.wish-tag {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: #e5e7eb;
+  cursor: pointer;
+}
+
+.wish-tag:active {
+  background: var(--primary-gold);
+  color: #000;
+}
+
+/* Submit Modal Buttons */
+.btn-primary-modal {
+  width: 100%;
+  background: linear-gradient(135deg, #ffd152 0%, #ff8a00 100%);
+  border: none;
+  color: #2b1700;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 165, 0, 0.35);
+  font-family: inherit;
+}
+
+.btn-primary-modal:active {
+  transform: scale(0.98);
+}
+
+/* Wish Reader Card */
+.krathong-reader-card {
+  position: absolute;
+  bottom: 130px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 380px;
+  background: rgba(18, 24, 38, 0.95);
+  border: 1.5px solid var(--primary-gold);
+  border-radius: 18px;
+  padding: 14px 16px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+  z-index: 30;
+  display: none;
+  animation: slideUp 0.25s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.reader-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.reader-author {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-gold);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reader-wish {
+  font-size: 13px;
+  color: #f3f4f6;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.btn-bless {
+  background: rgba(255, 209, 82, 0.15);
+  border: 1px solid var(--primary-gold);
+  color: var(--primary-gold);
+  padding: 6px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
